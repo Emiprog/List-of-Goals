@@ -27,7 +27,7 @@ class GoalsList:
         """Initialize a list of goals."""
         self.objectives = []
 
-    def add_goal(self, objective: str, deadline: str, status: str):
+    def add_goal(self, objective: str, deadline: str, status: str = 'active'):
         """Add goal to the list of goals."""
         self.objectives.append(Goal(objective, deadline, status))
 
@@ -37,6 +37,8 @@ class GoalsList:
         if goal:
             self.objectives.remove(goal)
             self._update_id()
+            global last_id
+            last_id = len(self.objectives) - 1
             return
         print("The goal not found to be deleted.")
 

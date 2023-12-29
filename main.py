@@ -3,7 +3,6 @@ import datetime
 from goal import GoalsList
 
 
-
 class Main:
     """Display a functionality and respond to choices when run."""
 
@@ -39,13 +38,18 @@ class Main:
             self.display()
             choice = input("Choose the option: ")
             if choice in self.choices:
-                self.choices.get(choice)
+                self.choices[choice]()
             else:
                 print("Choose a valid option.")
 
     def show_goals(self):
-        for goal in self.goal_list.objectives:
-            return "Number: {} | Objective: {} | Deadline: {}".format(goal.id, goal.objective, goal.status)
+        goals = self.goal_list.objectives
+        if goals:
+            for goal in goals:
+                print("Number: {0} | Objective: {1} | Deadline: {2} | Status: {3}"
+                      .format(str(goal.id), goal.objective, goal.deadline, goal.status))
+        else:
+            print("The list of goals is empty.")
 
     def add_goal(self):
         objective = input("Enter your objective: ")
@@ -54,7 +58,7 @@ class Main:
             ends = datetime.datetime.strptime(deadline, '%Y-%m-%d %H:%M:%S')
             time_now = datetime.datetime.now()
             time_difference = ends - time_now
-            self.goal_list.objectives.append((objective, time_difference))
+            self.goal_list.add_goal(objective, time_difference)
             print(f"Your new objective: {objective} with time to left: {time_difference}")
         except ValueError:
             print("Invalid date format. Please enter the date in the format YYYY-MM-DD HH:MM:SS.")
@@ -77,7 +81,7 @@ class Main:
             ends = datetime.datetime.strptime(new_deadline, '%Y-%m-%d %H:%M:%S')
             time_now = datetime.datetime.now()
             time_difference = ends - time_now
-            self.goal_list.modify_deadline(time_difference)
+            self.goal_list.modify_deadline(goal_id, str(time_difference))
             print(f"Modified goal nr {goal_id} with new deadline: {time_difference}.")
         except ValueError:
             print("Invalid date format. Please enter the date in the format YYYY-MM-DD HH:MM:SS.")
